@@ -21,6 +21,9 @@ body {
   padding: 2em 1em 1em;
   background-color: #FEFFFC;
 }
+.news p:not(:last-child) {
+  margin-bottom: 1em;
+}
 
 .news__title {
   padding-bottom: 2px;

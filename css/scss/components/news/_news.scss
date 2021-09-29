@@ -4,6 +4,10 @@ $border: 1px dashed black;
   padding: 2em 1em 1em;
 
   background-color: $color-ceramic;
+
+  p:not(:last-child) {
+    margin-bottom: 1em;
+  }
 }
 
 .news__title {
