@@ -8,9 +8,11 @@ if (isset($_GET['page'])) {
 	$page = 0;
 }
 
+// news from offset to limit
 $newsQuery = $ConnectDB->query("SELECT * FROM news ORDER BY idate DESC LIMIT 5 OFFSET $page");
 $news = $newsQuery->fetchAll();
 
+// overall news count
 $newsQuery = $ConnectDB->query("SELECT * FROM news");
 $newsCount = $newsQuery->numRows();
 
@@ -21,43 +23,62 @@ $html .= createNewsFooter($newsCount);
 echo $html;
 
 function createNewsBody($news) {
-	$newsBody = '<div class="news__body">';
+	$newsItems = createNewsItems($news);
+
+	return "
+		<div class='news__body'>
+			<h2 class='news__title'>Новости</h2>
+			$newsItems
+		</div>
+	";
+}
+
+function createNewsItems($news) {
+	$newsItems = '';
+
 	foreach ($news as $newsItem) {
 		$id = $newsItem['id'];
 		$date = date('d.m.Y', $newsItem['idate']);
 		$title = $newsItem['title'];
 		$announce = $newsItem['announce'];
-		$content = $newsItem['content'];
 
-		$newsBody .= "
-    	<div class='news-item' data-id='$id'>
-			<div class='news-item__header'>
-				<span class='news-item__date'>$date</span>
-				<h3 class='news-item__title'>$title</h3>
+		$newsItems .= "
+			<div class='news-item' data-id='$id'>
+				<div class='news-item__header'>
+					<span class='news-item__date'>$date</span>
+					<h3 class='news-item__title'>$title</h3>
+				</div>
+				<div class='news-item__body'>$announce</div>
 			</div>
-			<div class='news-item__body'>$announce</div>
-		</div>
-    ";
+		";
 	}
-	$newsBody .= '</div>';
 
-	return $newsBody;
+	return $newsItems;
 }
 
 function createNewsFooter($newsCount) {
+	$footerButtons = createNewsFooterButtons($newsCount);
+
+	return "
+		<div class='news__footer'>
+			$footerButtons
+		</div>";
+}
+
+function createNewsFooterButtons($newsCount) {
 	$pages = (int)($newsCount/5) + 1;
 
-	$footer = '<div class="news__footer">';
+	$buttons = "";
+
 	for ($i = 0; $i < $pages; $i++) {
 		$pageNum = $i+1;
 
-		$footer .= "
+		$buttons .= "
 			<a style='text-decoration: none' href='./news.php?page=$pageNum'>
 				<button style='width: 30px'>$pageNum</button>
 			</a>
 		";
 	}
-	$footer .= '</div>';
 
-	return $footer;
+	return $buttons;
 }
