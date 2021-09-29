@@ -1,0 +1,21 @@
+.news-item:not(:last-child) {
+  margin-bottom: 1em;
+}
+.news-item__header {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: .2em;
+}
+.news-item__date {
+  display: inline-block;
+
+  padding: 2px 4px;
+  margin-right: .5em;
+
+  background-color: $color-camelot;
+  color: $color-ceramic;
+}
+.news-item__title {
+  font-weight: normal;
+}

@@ -26,8 +26,8 @@ function createNewsBody($news) {
 	$newsItems = createNewsItems($news);
 
 	return "
+		<h2 class='news__title'>Новости</h2>
 		<div class='news__body'>
-			<h2 class='news__title'>Новости</h2>
 			$newsItems
 		</div>
 	";
@@ -43,10 +43,12 @@ function createNewsItems($news) {
 		$announce = $newsItem['announce'];
 
 		$newsItems .= "
-			<div class='news-item' data-id='$id'>
+			<div class='news-item'>
 				<div class='news-item__header'>
 					<span class='news-item__date'>$date</span>
-					<h3 class='news-item__title'>$title</h3>
+					<h3 class='news-item__title'>
+						<a href='./view.php?id=$id'>$title</a>
+					</h3>
 				</div>
 				<div class='news-item__body'>$announce</div>
 			</div>
@@ -61,7 +63,10 @@ function createNewsFooter($newsCount) {
 
 	return "
 		<div class='news__footer'>
-			$footerButtons
+			<h3>Страницы:</h3>
+			<div class='news__pages'>
+				$footerButtons
+			</div>
 		</div>";
 }
 
@@ -72,11 +77,12 @@ function createNewsFooterButtons($newsCount) {
 
 	for ($i = 0; $i < $pages; $i++) {
 		$pageNum = $i+1;
+		$classActive = $pageNum === (int)$_GET['page'] ? 'active' : '';
 
 		$buttons .= "
-			<a style='text-decoration: none' href='./news.php?page=$pageNum'>
-				<button style='width: 30px'>$pageNum</button>
-			</a>
+			<button class='news__page-btn $classActive'>
+				<a href='./news.php?page=$pageNum'>$pageNum</a>
+			</button>
 		";
 	}
 

@@ -1,3 +1,5 @@
+$border: 1px dashed black;
+
 .news {
   padding: 2em 1em 1em;
 
@@ -6,7 +8,43 @@
 
 .news__title {
   padding-bottom: 2px;
-  border-bottom: 1px dotted black;
+  border-bottom: $border;
+}
 
-  margin-bottom: 1em;
+.news__body {
+  padding: 2em 0;
+}
+
+.news__footer {
+  border-top: $border;
+  padding-top: 1em;
+
+  h3 {
+    margin-bottom: .2em;
+  }
+}
+
+.news__pages {
+
+  .news__page-btn {
+    width: 35px;
+    margin-bottom: 5px;
+
+    background-color: $color-gray-nurse;
+    border: 1px solid $color-celeste;
+    color: $color-gray-asparagus;
+
+    &.active {
+      background-color: $color-camelot;
+      color: $color-ceramic;
+    }
+
+    a {
+      display: inline-block;
+      width: 100%;
+
+      color: inherit;
+      text-decoration: none;
+    }
+  }
 }
