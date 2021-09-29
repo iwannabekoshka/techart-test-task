@@ -9,7 +9,6 @@
 
 <div class="container">
 	<section class="section news">
-		<h2 class="news__title">Новости</h2>
         <?php include './queries/getNews.php'?>
 	</section>
 </div>

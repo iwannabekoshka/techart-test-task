@@ -114,6 +114,11 @@ class ConnectDB {
         return 'b';
     }
 
+    public function numRows() {
+        $this->query->store_result();
+        return $this->query->num_rows;
+    }
+
 }
 ?>
 
