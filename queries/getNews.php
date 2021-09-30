@@ -75,8 +75,8 @@ function createNewsFooterButtons($newsCount) {
 
 	$buttons = "";
 
-	for ($i = 0; $i < $pages; $i++) {
-		$pageNum = $i+1;
+	for ($i = 1; $i <= $pages; $i++) {
+		$pageNum = $i;
 
 		$classActive = isPageActive($pageNum) ? 'active' : '';
 
@@ -91,5 +91,5 @@ function createNewsFooterButtons($newsCount) {
 }
 
 function isPageActive($page) {
-	return isset($_GET['page']) && $page === (int)$_GET['page'];
+	return ( isset($_GET['page']) && $page === (int)$_GET['page'] ) || ( !isset($_GET['page']) && $page === 1);
 }
