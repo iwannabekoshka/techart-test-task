@@ -5,5 +5,5 @@ if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
 	$uri = 'http://';
 }
 $uri .= $_SERVER['HTTP_HOST'];
-header("Location: $uri/techart-test-task/news.php");
+header("Location: $uri/news.php");
 exit;
