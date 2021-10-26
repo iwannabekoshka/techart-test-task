@@ -1,6 +1,5 @@
 <?php
 
-
 class Router
 {
 	private $routes;
@@ -21,9 +20,12 @@ class Router
 			exit;
 		}
 
+		$pageNotFound = true;
+
 		// Проверка наличия запроса в routes.php
 		foreach ($this->routes as $uriPattern => $path) {
 			if ( preg_match("~$uriPattern~", $uri) ) {
+				$pageNotFound = false;
 
 				// Внутренний маршрут controller/action/params
 				$internalRoute = preg_replace("~$uriPattern~", $path, $uri);
@@ -49,6 +51,10 @@ class Router
 					break;
 				}
 			}
+		}
+
+		if ($pageNotFound) {
+			ErrorHandler::throwError404();
 		}
 	}
 

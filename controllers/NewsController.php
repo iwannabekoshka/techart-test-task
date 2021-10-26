@@ -16,9 +16,7 @@ class NewsController
 
 		$newsList = News::getList($offset, $limit);
 		if (!$newsList) {
-			$domain = $_SERVER['HTTP_HOST'];
-			header("Location: http://$domain/not-found");
-			exit;
+			ErrorHandler::throwError404();
 		}
 		$newsCount = News::getCount();
 		$pages = (int)($newsCount/5) + 1;
@@ -43,9 +41,7 @@ class NewsController
 		}
 
 		if (!$newsItem) {
-			$domain = $_SERVER['HTTP_HOST'];
-			header("Location: http://$domain/not-found");
-			exit;
+			ErrorHandler::throwError404();
 		}
 
 		$template = "news/view.php";
