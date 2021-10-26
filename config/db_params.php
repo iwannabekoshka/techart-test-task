@@ -1,7 +1,7 @@
 <?php
 return [
 	'host' => 'localhost',
-	'dbname' => 'techart_test_task',
+	'dbname' => 'test_db',
 	'user' => 'root',
-	'password' => '',
+	'password' => 'root',
 ];
