@@ -6,14 +6,17 @@ class News
 	 * Returns single news item with current id
 	 * @param integer $id
 	 */
-	public static function getNewsItemById($id)
+	public static function getItemById($id)
 	{
 		$id = (int)$id;
 
 		if ($id) {
 			$db = Database::getConnection();
 
-			$result = $db->query("SELECT * FROM news WHERE id = $id");
+			$result = $db->prepare("SELECT * FROM news WHERE id = :id");
+			$result->bindParam(':id', $id, PDO::PARAM_INT);
+			$result->execute();
+
 
 			// Вывод данных в формате ['COLUMN_NAME' => 'VALUE']
 			$result->setFetchMode(PDO::FETCH_ASSOC);
@@ -25,28 +28,25 @@ class News
 	}
 
 	/**
-	 * Returns an array of news items limited by page
-	 * @param $page
+	 * Returns an array of news items limited by offset
+	 * @param $offset
 	 * @return array
 	 */
-	public static function getNewsList($page)
+	public static function getList($offset, $limit)
 	{
 		$db = Database::getConnection();
 
 		$newsList = [];
 
-		if ($page) {
-			$offset = ( (int)$page - 1 ) * 5;
-		} else {
-			$offset = 0;
-		}
-
-		$result = $db->query("
+		$result = $db->prepare("
 								SELECT * 
 								FROM news 
 								ORDER BY idate DESC 
-								LIMIT 5
-								OFFSET $offset");
+								LIMIT :limit 
+								OFFSET :offset");
+		$result->bindParam(':offset', $offset, PDO::PARAM_INT);
+		$result->bindParam(':limit', $limit, PDO::PARAM_INT);
+		$result->execute();
 
 		while ($row = $result->fetch()) {
 			array_push($newsList, [
@@ -64,12 +64,11 @@ class News
 	 * Returns overall count of rows
 	 * @return mixed
 	 */
-	public static function getNewsCount() {
+	public static function getCount() {
 		$db = Database::getConnection();
 
-		$result = $db->query("SELECT * FROM news");
-		$count = count($result->fetchAll());
+		$number_of_rows = $db->query('SELECT COUNT(*) FROM news')->fetchColumn();
 
-		return $count;
+		return $number_of_rows;
 	}
 }
