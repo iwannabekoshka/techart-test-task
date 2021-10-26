@@ -6,11 +6,32 @@ class NewsController
 {
 	public function actionIndex($page)
 	{
-		$newsList = News::getNewsList($page);
-		$newsCount = News::getNewsCount();
+		if ($page) {
+			$offset = ( (int)$page - 1 ) * 5;
+		} else {
+			$offset = 0;
+		}
+
+		$limit = 5;
+
+		$newsList = News::getList($offset, $limit);
+		if (!$newsList) {
+			$domain = $_SERVER['HTTP_HOST'];
+			header("Location: http://$domain/not-found");
+			exit;
+		}
+		$newsCount = News::getCount();
 		$pages = (int)($newsCount/5) + 1;
 
-		require_once(ROOT.'/views/news/index.php');
+		$template = "news/index.php";
+		$params = [
+			"pageTitle" => "News List",
+			"newsList" => $newsList,
+			"newsCount" => $newsCount,
+			"pages" => $pages,
+			"page" => $page,
+		];
+		$this->render($template, $params);
 
 		return true;
 	}
@@ -18,32 +39,46 @@ class NewsController
 	public function actionView($id)
 	{
 		if ($id) {
-			$newsItem = News::getNewsItemById($id);
+			$newsItem = News::getItemById($id);
 		}
 
-		require_once(ROOT.'/views/news/view.php');
+		if (!$newsItem) {
+			$domain = $_SERVER['HTTP_HOST'];
+			header("Location: http://$domain/not-found");
+			exit;
+		}
+
+		$template = "news/view.php";
+		$params = [
+			"pageTitle" => "News View",
+			"newsItem" => $newsItem,
+		];
+		$this->render($template, $params);
 
 		return true;
 	}
 
-	/**
-	 * Returns true/false if current page is equal to iteration page (used in pagination generation)
-	 * @param $page
-	 * @param $i
-	 * @return bool
-	 */
-	private function isPageActive($page, $i) {
-		return ( (int)$page === (int)$i ) || !$page;
+	public function actionError404()
+	{
+
+		$template = "404.php";
+		$params = [
+			"pageTitle" => "Error 404",
+		];
+		$this->render($template, $params);
+
+		return true;
 	}
 
-	/**
-	 * Returns pagination button class
-	 * @param $page
-	 * @param $i
-	 * @return string
-	 */
-	public function getButtonClass($page, $i) {
-		$activeClass = $this->isPageActive($page, $i) ? 'active' : '';
-		return "news__page-btn $activeClass";
+	public function render($template, $params)
+	{
+		extract($params, EXTR_OVERWRITE);
+
+		ob_start();
+		require_once(ROOT.'/views/'.$template);
+		$content = ob_get_contents();
+		ob_end_clean();
+
+		require_once(ROOT.'/views/news/layout.php');
 	}
 }
